@@ -1,4 +1,4 @@
-This is e-pTeX, Version 3.141592653-p4.0.0-220214-2.6 (utf8.euc) (TeX Live 2022) (preloaded format=platex 2022.12.8)  7 MAY 2023 18:44
+This is e-pTeX, Version 3.141592653-p4.0.0-220214-2.6 (utf8.euc) (TeX Live 2022) (preloaded format=platex 2022.12.8)  8 MAY 2023 21:38
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -195,14 +195,16 @@ File: images/IMG_7424.JPG Graphic file (type bmp)
 <images/IMG_7424.JPG>
 File: images/IMG_7425.JPG Graphic file (type bmp)
 <images/IMG_7425.JPG>
- [10] [11] [12] [13] (./paper.aux) ) 
+File: images/pro.png Graphic file (type bmp)
+<images/pro.png>
+ [10] [11] [12] [13] [14] (./paper.aux) ) 
 Here is how much of TeX's memory you used:
- 1221 strings out of 478724
- 20161 string characters out of 5858392
+ 1227 strings out of 478724
+ 20253 string characters out of 5858392
  324150 words of memory out of 5000000
- 19677 multiletter control sequences out of 15000+600000
+ 19681 multiletter control sequences out of 15000+600000
  478869 words of font info for 72 fonts, out of 8000000 for 9000
  934 hyphenation exceptions out of 8191
  55i,8n,62p,870b,324s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on paper.dvi (13 pages, 18212 bytes).
+Output written on paper.dvi (14 pages, 18520 bytes).
