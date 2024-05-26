@@ -1,0 +1,222 @@
+\documentclass[dvipdfmx,a4paper,12pt]{jsarticle}
+
+\title{Learning a Boolean function}
+\author{伊藤　碧己}
+
+\usepackage[dvipdfmx]{graphicx}
+
+\begin{document}
+\maketitle
+
+%メモ：
+%・termとclauseの使い分け→DNFでは項(term)，CNFでは節(clause)と表現されている
+%・DNFをSAT問題として簡単に表現できる理由
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=28mm,angle=270]{images/1.jpg}
+\end{figure}
+\textbf{ブール関数の学習.}
+私たちは時々"ブラックボックス "を与えられる，ブール関数$f(x_{1},...,x_{N})$を評価する．私たちはその箱を開ける方法を持たない，しかし私たちは考える，その関数は実際には非常に単純なものであると．$x = x_{1}...x_{N}$に様々な値を代入することで，私たちはその箱の振る舞いを観察することができ，その中にある隠れたルールを学ぶことができるかもしれない．例えば、$N = 20$のブール変数の秘密の関数は表2に示すような値をとるかもしれない，$f(x) = 1$である16のケースと$f(x) = 0$である16のケースが列挙されている．
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=55mm,angle=270]{images/table2.jpg}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=20mm,angle=270]{images/2.jpg}
+\end{figure}
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=12.5mm,angle=270]{images/3.jpg}
+\end{figure}
+私たちはその関数がDNF（選言標準形）であると仮定するとしよう，いくつかの項のみを持つ．私たちはすぐに分かる，このような仮定を充足可能性問題として表現するのは簡単であると．
+そして，筆者が表2に対応する節を構築し，SATソルバーに提示したところ，彼は実際に，ほとんど即座に知った，非常に単純な式がすべてのデータと一致すると:
+\setcounter{equation}{26}
+\begin{equation}
+f(x_{1},...,x_{20}) = \bar{x}_{2}\bar{x}_{3}\bar{x}_{10}\lor\bar{x}_{6}\bar{x}_{10}\bar{x}_{12}\lor x_{8}\bar{x}_{13}\bar{x}_{15}\lor \bar{x}_{8}x_{10}\bar{x}_{12} 
+\end{equation}  
+%\footnote{最も簡単にDNFを作成するには，表２の各行に対し，1なら正リテラル，0なら負リテラル}
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=18.5mm,angle=270]{images/2-2.jpg}
+\end{figure}
+
+この式は，$2MN$の変数$p_{i,j}$と$q_{i,j}$で節を構成することによって発見された，
+ここで$1 \le i \le M$ かつ $1 \le j \le N$である，
+$M$はDNFで許される項の最大個数（ここでは$M = 4$）である，また
+\begin{equation}
+p_{i,j} = [ 項iはx_{j}を含む]，q_{i,j} = [ 項iは\bar{x}_{j}を含む] 
+\end{equation}
+%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=38mm,angle=270]{images/2-3.jpg}
+\end{figure}
+もし関数が$P$個の特定の点で1に等しくなるように制約されているなら，\footnote{f(x1,x2,...xn)=1となるブール変数の組み合わせがP個ある，という意味}加えて補助変数$z_{i,k}$を用いる，$1 \le i \le M$かつ$1 \le k \le P$，そのような全ての点について各項に１つずつ．
+
+ 表2は，$f(1,1,0,0,...,1)=1$であると述べており，私たちはこの指定を捕らえることができる，次の節を構成することによって
+ \begin{equation}
+(z_{1,1} \lor z_{2,1} \lor ・・・ \lor z_{M,1})
+\end{equation}  
+次の節たちとともに
+  \begin{equation}
+(\bar{z}_{i,1} \lor \bar{q}_{i,1}) \land (\bar{z}_{i,1} \lor \bar{q}_{i,2}) \land (\bar{z}_{i,1} \lor \bar{p}_{i,3}) \land (\bar{z}_{i,1} \lor \bar{p}_{i,4}) \land ・・・ \land (\bar{z}_{i,1} \lor \bar{q}_{i,20})
+\end{equation}  
+$1 \le i \le M$に対して．
+注釈：(29)は示す，DNFの項のうち少なくとも1つは真と評価されなければならない；そして
+(30)は示す，もし項$i$が点1100...1で真ならば，それは$\bar{x}_{1}$または$\bar{x}_{2}$または$x_{3}$または$x_{4}または...$または$\bar{x}_{20}$を含むことはできない．
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=130mm]{images/2-4.png}
+\end{figure}
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=26mm,angle=270]{images/3-1.jpg}
+\end{figure}
+
+表2はまた，$f(1,0,1,0,...,1)=0$であることも示している．この指定は対応する，節
+  \begin{equation}
+(q_{i,1} \lor p_{i,2} \lor q_{i,3} \lor p_{i,4} \lor ・・・ \lor q_{i,20})
+\end{equation}  
+に．$1 \le i \le M$に対して．
+(DNFの各項は与えられた点で0でなければならない；それゆえ$\bar{x}_{1}$ or $x_{2}$ or $\bar{x}_{3}$ or $x_{4}$ or ・・・ or $\bar{x}_{20}$のいずれかが存在しなければならない，$i$の各値に対して．
+
+一般に，$f(x) = 1$となる全ての場合で生じる，(29)のような長さ$M$の節が1つ，加えて(30)のような長さ2の節が$MN$．
+$f(x) = 0$となる全ての場合で生じる，(31)のような長さ$N$の節が$M$．我々は$x_{j}=1$の時$q_{i,j}$を用いる，この問題の中でその点において，かつ$x_{j}=0$の時$p_{i,j}$を，(30)及び(31)の両方に．この構成はA. P. Kamath, N. K. Karmarkar, K. G. Ramakrishnan, and M. G. C. Resende (Mathematical Programming 57 (1992), 215-238) によるものである，(彼らは)多くの例を示している．表2より、$M = 4$, $N = 20$, $P = 16$で，それは1360の節を生み出す，合計の長さ3904で，224の変数を持つ；SATソルバーはその時解を求める，$p_{1,1}=q_{1,1}=p_{1,2}=1,...,$(27)を導く．
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=17mm,angle=270]{images/3-2.jpg}
+\end{figure}
+
+(27)の単純性はそれを有力にする，SATソルバーが確かに隠れた関数$f(x)$の本質を見抜いたことを．32回中32回正しい値に一致する確率は$2^32$分の1なので，我々は圧倒的な証拠を持っていると言えるだろう，この等式を支持する.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=22mm,angle=270]{images/3-3.jpg}
+\end{figure}
+
+ しかしそうではない：そのような推論は誤りである．表2の値は，実際にはまったく異なる方法と式により生じたものであり， (27)は，$f(x)$の予測因子として本質的に何の信頼もない，他のどのような$x$の値に対しても．（練習問題53を参照）この誤りは，20変数のshort-DNFブール関数が全く珍しいものではなく；$2^32$個より多く存在するという事実に起因する．
+ \begin{figure}[htbp]
+  \centering
+  \includegraphics[width=18mm,angle=270]{images/3-4.jpg}
+\end{figure}
+一方で，隠れた関数$f(x)$が最大M個の項を持つDNFを持つことが分かっている場合（しかしそれ以外には何も分かっていない)，節(29)-(31)は，我々にそれらの項を発見する良い方法を与えてくれる，十分に大きく偏りのない，値を観測する"訓練セット"を持っていれば．
+
+ \begin{figure}[htbp]
+  \centering
+  \includegraphics[width=22mm,angle=270]{images/3-5.jpg}
+\end{figure}
+
+例えば，(27)が実際に箱の中の関数であると仮定しよう．もし我々が32のランダムな点$x$で$f(x)$を調べても，我々は十分なデータを持っていない，どんな推論を行うにも．しかし100のランダムな学習点はほとんどいつも正しい解(27)にたどり着くだろう．この計算には通常344の変数と，3942の節が関わっている；しかしそれは早く，約1億回のメモリへのアクセスのみを必要とする．
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+
+ \begin{figure}[htbp]
+  \centering
+  \includegraphics[width=32mm,angle=270]{images/3-6.jpg}
+  \end{figure}
+  100要素のトレーニングセットを用いた筆者の実験の1つは生み出した
+  
+  \begin{equation}
+\hat{f}(x_{1},...,x_{20}) = \bar{x}_{2}\bar{x}_{3}\bar{x}_{10} \lor x_{3}\bar{x}_{6}\bar{x}_{10}\bar{x}_{12} \lor x_{8}\bar{x}_{13}\bar{x}_{15} \lor \bar{x}_{8}x_{10}\bar{x}_{12}, 
+\end{equation}  
+  
+これは真実に近いが完全には正確でない．(練習問題59は$\hat{f}(x)$が97\%以上の$f(x)$と等しいことを示す．)この例題に対するさらなる研究は示した，他の9個の訓練点は$f(x)$を一意に推論するのに十分であり，従って100％の信頼性が得られた（練習問題61参照)．
+
+
+
+(本文のアルゴリズムを実際に行うプログラム:learning.py)
+
+実行例:python learning.py input\_table2\_eq1.txt input\_table2\_eq0.txt 4
+%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+
+
+\section*{Exercise 53}
+\subsection*{問題}
+ \begin{figure}[htbp]
+  \centering
+  \includegraphics[width=142mm,angle=0]{images/51.jpg}
+  \end{figure}
+ 表2の数字は明確に非ランダムである．あなたは何故か分かるだろうか．
+ \subsection*{knuth先生の解答}
+  \begin{figure}[htbp]
+  \centering
+  \includegraphics[width=142mm,angle=0]{images/53_a.jpg}
+  \end{figure}
+  
+  
+  
+ 左側は$π$の2進展開，右側は$e$の2進展開，一度に20ビットずつ．（付録A参照）．
+ 
+すべての20ビットの$x$に対して$f(x)$を定義する1つの方法は，$π/4 = \sum_{k=1}^\infty u_{k}/2^{20k}$ と $e/4 = \sum_{l=1}^\infty v_{l}/2^{20l}$ を記述することである，
+ここで各$u_{k}$と$v_{l}$は20ビットの数である．$x=u_{k}$かつ$x=v_{l}$となるような$k$と$l$を最小にしてみよう．
+その時，$f(x) = [k \leq l]$
+
+式(27)は、実際には魔法のような錯覚を持続させるために考案されたものである：多くの単純なブール関数は表２のデータと一致する，3リテラルずつの4項のDNFを必要とするとしても．しかし，そのうち２つだけが，(27)のように，追加的な性質を持っている，それらが$k=22$までの$u_{k}$と$l=20$までの$v_{l}$を使った10以上のケースについて，前の段落の$f(x)$の定義と実際に一致するという．誰かは疑い始めてしまうかもしれない，SATソルバーが$π$と$e$の間に新しく深い関係を発見したのではないかと．
+
+   \begin{figure}[htbp]
+  \centering
+  \includegraphics[width=142mm,angle=0]{images/appen.png}
+  \end{figure}
+
+\newpage
+ \subsection*{自身の解答}
+ \begin{enumerate}
+ 
+\item  $π/4 = \sum_{k=1}^\infty u_{k}/2^{20k}$ は，$π/4$を2進数に変換し，上の桁から20ビットずつ切り出すことを表している．
+ 
+\begin{itemize}
+\item 実際に計算するプログラム:ex53\_1.py
+\item 実行例:python ex53\_1.py -pi 320
+\end{itemize}
+
+\item $x=u_{k}$かつ$x=v_{l}$となるような$k$と$l$を探索する
+\begin{itemize}
+\item プログラム:ex53\_2.py
+\item 実行例:python ex53\_2.py 32000
+\end{itemize}
+
+\item  $k=17~22$の$u_{k}$と$l=17~20$の$v_{l}$において表2の$f(x)$の定義と一致する(=すなわち,$u_{k}$の20ビットを$x$とすると$f(x)$=1となり，$v_{l}$の20ビットを$x$とすると$f(x)$=0となる)
+\item プログラム:
+\item 実行例:
+ \end{enumerate}
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Exercise 59}
+ \begin{figure}[htbp]
+  \centering
+  \includegraphics[width=142mm,angle=0]{images/59.jpg}
+  \end{figure}
+
+ \begin{figure}[htbp]
+  \centering
+  \includegraphics[width=142mm,angle=0]{images/59a.jpg}
+  \end{figure}
+  
+  
+%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Exercise 61}
+ \begin{figure}[htbp]
+  \centering
+  \includegraphics[width=142mm,angle=0]{images/61.jpg}
+  \end{figure}
+
+ \begin{figure}[htbp]
+  \centering
+  \includegraphics[width=142mm,angle=0]{images/61a.jpg}
+  \end{figure}
+
+  
+
+\end{document}
