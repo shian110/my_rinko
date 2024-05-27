@@ -4,7 +4,7 @@
 \author{伊藤　碧己}
 
 \usepackage[dvipdfmx]{graphicx}
-
+\usepackage{amsmath}
 \begin{document}
 \maketitle
 
@@ -174,7 +174,7 @@ $f(x) = 0$となる全ての場合で生じる，(31)のような長さ$N$の節
  \subsection*{自身の解答}
  \begin{enumerate}
  
-\item  $π/4 = \sum_{k=1}^\infty u_{k}/2^{20k}$ は，$π/4$を2進数に変換し，上の桁から20ビットずつ切り出すことを表している．
+\item  $π/4 = \sum_{k=1}^\infty u_{k}/2^{20k}$ は，$π/4$を2進数に変換し，上の桁から20ビットずつ切り出すことを表している．(e/4の方も同様)
  
 \begin{itemize}
 \item 実際に計算するプログラム:ex53\_1.py
@@ -187,23 +187,139 @@ $f(x) = 0$となる全ての場合で生じる，(31)のような長さ$N$の節
 \item 実行例:python ex53\_2.py 32000
 \end{itemize}
 
-\item  $k=17~22$の$u_{k}$と$l=17~20$の$v_{l}$において表2の$f(x)$の定義と一致する(=すなわち,$u_{k}$の20ビットを$x$とすると$f(x)$=1となり，$v_{l}$の20ビットを$x$とすると$f(x)$=0となる)
-\item プログラム:
-\item 実行例:
+\item  $k=17..22$の$u_{k}$と$l=17..20$の$v_{l}$において表2の$f(x)$の定義と一致する(=すなわち,$u_{k}$の20ビットを$x$とすると$f(x)$=1となり，$v_{l}$の20ビットを$x$とすると$f(x)$=0となる)
+
+\begin{itemize}
+\item プログラム:ex53\_3.py
+\item 実行例:python ex53\_3.py 11101111100101010001
+\end{itemize}
+
+
+
+
  \end{enumerate}
+ 
+  \begin{table}[h]
+ \caption{$u_{k}(k=17..23)$}
+ {\scriptsize
+ \hspace{4cm}
+ \begin{tabular}{l|r|r}
+ $k$ & $u_{k}$ & $f(x)$  \\ \hline
+ 17 & 11101111100101010001 & 1 \\
+ 18 &10011011001111001101 & 1\\
+19 &00111010010000110001 &1 \\
+20 &10110011000000101011&1\\
+21 &00001010011011011111&1\\
+22 &00100101111100010100&1\\
+23 &00110111010011111110&0\\
+\end{tabular}
+ }
+ \end{table}
+ 
+  \begin{table}[h]
+ \caption{$v_{l}(l=17..21)$}
+ {\scriptsize
+ \hspace{4cm}
+ \begin{tabular}{l|r|r}
+
+ $l$ & $v_{l}$ & $f(x)$  \\ \hline
+17 &01111101001011111110 & 0\\
+18 &00110110001101100011&0\\
+19 &00001100011101011101&0\\
+20 &10001111011010000001&0\\
+21 &10110010000000101010&1 \\
+\end{tabular}
+ }
+ \end{table}
+
 
   %%%%%%%%%%%%%%%%%%%%%%%%%
+  
+\newpage
 \section*{Exercise 59}
+\subsection*{問題}
  \begin{figure}[htbp]
   \centering
   \includegraphics[width=142mm,angle=0]{images/59.jpg}
   \end{figure}
+  (32)の$\hat{f(x)}$が(27)の$f(x)$と異なる正確な確率を計算せよ．
+  
+  (任意の入力$x$に対し,$f(x) \neq \hat{f(x)}$となる確率)
 
+ \subsection*{knuth先生の解答}
  \begin{figure}[htbp]
   \centering
   \includegraphics[width=142mm,angle=0]{images/59a.jpg}
   \end{figure}
   
+  $f(x) \oplus \hat{f(x)} = x_{2}\bar{x}_{3}\bar{x}_{6}\bar{x}_{10}\bar{x}_{12}(\bar{x}_{8} \lor x_{8} (x_{13} \lor x_{15}))$
+  は8変数の関数で，7つの解を持つ．したがって確率は7/256 = .02734375である．
+
+ \subsection*{自身の解答}
+ $f(x) \neq \hat{f(x)}$となるような入力$x$の総数を計算する．
+ $f(x) \oplus \hat{f(x)}=1$となれば良いので，まず$f(x) \oplus \hat{f(x)}$を考える．
+  
+ \begin{gather*}
+f(x) = \bar{x}_{2}\bar{x}_{3}\bar{x}_{10}\lor\bar{x}_{6}\bar{x}_{10}\bar{x}_{12}\lor x_{8}\bar{x}_{13}\bar{x}_{15}\lor \bar{x}_{8}x_{10}\bar{x}_{12} \\
+\hat{f}(x) = \bar{x}_{2}\bar{x}_{3}\bar{x}_{10} \lor x_{3}\bar{x}_{6}\bar{x}_{10}\bar{x}_{12} \lor x_{8}\bar{x}_{13}\bar{x}_{15} \lor \bar{x}_{8}x_{10}\bar{x}_{12}
+\end{gather*}  
+ここで，
+ \begin{gather*}
+A = \bar{x}_{2}\bar{x}_{3}\bar{x}_{10}\lor x_{8}\bar{x}_{13}\bar{x}_{15}\lor \bar{x}_{8}x_{10}\bar{x}_{12} \\
+B  = \bar{x}_{6}\bar{x}_{10}\bar{x}_{12} 
+\end{gather*}  
+と置くと，
+\begin{gather*}
+f(x) = A \lor B \\
+\hat{f}(x) = A \lor x_{3}B 
+\end{gather*}  
+と表せる．
+\begin{gather*}
+f(x) \oplus \hat{f(x)} = f(x)\overline{\hat{f(x)}} \lor \overline{f(x)}\hat{f(x)} 
+\end{gather*}  
+より，まず $f(x)\overline{\hat{f(x)}}$について考える．
+\begin{align*}
+f(x)\overline{\hat{f(x)}}  & = (A \lor B)・\overline{(A \lor x_{3}B)} \\
+& = (A \lor B)・(\bar{A} ・(\bar{x}_{3} \lor \bar{B})) \\
+& = (A \lor B)・(\bar{x}_{3}\bar{A} \lor \bar{A}\bar{B}) \\
+& = \bar{x}_{3}A\bar{A} \lor A\bar{A}\bar{B} \lor \bar{x}_{3}\bar{A}\bar{B} \lor \bar{A}\bar{B}B \\
+& = \bar{x}_{3}\bar{A}B \tag{i}
+\end{align*}  
+次に，$\overline{f(x)}\hat{f(x)}$について考える．
+\begin{align*}
+\overline{f(x)}\hat{f(x)}  & = \overline{(A \lor B)}・(A \lor x_{3}B) \\
+& = \bar{A}\bar{B}・(A \lor x_{3}B) \\
+& = \bar{A}\bar{B}A \lor  \bar{A}\bar{B}x_{3}B \\
+& = 0 \tag{ii}
+\end{align*}  
+(i),(ii)より，
+\begin{gather*}
+f(x) \oplus \hat{f(x)} =  \bar{x}_{3}\bar{A}B 
+\end{gather*}  
+\begin{align*}
+ \bar{x}_{3}\bar{A}B &= \bar{x}_{3}・(\overline{\bar{x}_{2}\bar{x}_{3}\bar{x}_{10}\lor x_{8}\bar{x}_{13}\bar{x}_{15}\lor \bar{x}_{8}x_{10}\bar{x}_{12}})・(\bar{x}_{6}\bar{x}_{10}\bar{x}_{12}) \\
+ & = \bar{x}_{3}・(\overline{\bar{x}_{2}\bar{x}_{3}\bar{x}_{10}}・ \overline{x_{8}\bar{x}_{13}\bar{x}_{15}}・ \overline{\bar{x}_{8}x_{10}\bar{x}_{12}})・(\bar{x}_{6}\bar{x}_{10}\bar{x}_{12}) \\
+ & = \bar{x}_{3}\bar{x}_{6}\bar{x}_{10}\bar{x}_{12}・(x_{2} \lor x_{3} \lor x_{10})・(\bar{x}_{8} \lor x_{13} \lor x_{15})・(x_{8} \lor \bar{x}_{10} \lor x_{12}) \\
+ & = (\bar{x}_{3}\bar{x}_{6}\bar{x}_{10}\bar{x}_{12} \lor \bar{x}_{3}\bar{x}_{6}\bar{x}_{10}\bar{x}_{12}x_{2}x_{3} \lor \bar{x}_{3}\bar{x}_{6}\bar{x}_{10}\bar{x}_{12}x_{2}x_{10})・(\bar{x}_{8} \lor x_{13} \lor x_{15})・(x_{8} \lor \bar{x}_{10} \lor x_{12}) \\
+& = x_{2} \bar{x}_{3}\bar{x}_{6}\bar{x}_{10}\bar{x}_{12}・(\bar{x}_{8} \lor x_{13} \lor x_{15})・(x_{8} \lor \bar{x}_{10} \lor x_{12}) \\
+& = (x_{2} \bar{x}_{3}\bar{x}_{6}\bar{x}_{10}\bar{x}_{12}\bar{x}_{8} \lor x_{2} \bar{x}_{3}\bar{x}_{6}\bar{x}_{10}\bar{x}_{12}x_{13} \lor x_{2} \bar{x}_{3}\bar{x}_{6}\bar{x}_{10}\bar{x}_{12}x_{15})・(x_{8} \lor \bar{x}_{10} \lor x_{12}) \\
+& = x_{2}\bar{x}_{3}\bar{x}_{6}\bar{x}_{10}\bar{x}_{12}\bar{x}_{8}x_{8} \lor x_{2} \bar{x}_{3}\bar{x}_{6}\bar{x}_{10}\bar{x}_{12}x_{13}x_{8} \lor x_{2} \bar{x}_{3}\bar{x}_{6}\bar{x}_{10}\bar{x}_{12}x_{15}x_{8}  \\
+ & \lor x_{2} \bar{x}_{3}\bar{x}_{6}\bar{x}_{10}\bar{x}_{12}\bar{x}_{8}\bar{x}_{10} \lor x_{2} \bar{x}_{3}\bar{x}_{6}\bar{x}_{10}\bar{x}_{12}x_{13}\bar{x}_{10} \lor x_{2} \bar{x}_{3}\bar{x}_{6}\bar{x}_{10}\bar{x}_{12}x_{15}\bar{x}_{10} \\
+ &  \lor x_{2} \bar{x}_{3}\bar{x}_{6}\bar{x}_{10}\bar{x}_{12}\bar{x}_{8}x_{12} \lor x_{2} \bar{x}_{3}\bar{x}_{6}\bar{x}_{10}\bar{x}_{12}x_{13}x_{12} \lor x_{2} \bar{x}_{3}\bar{x}_{6}\bar{x}_{10}\bar{x}_{12}x_{15}x_{12} \\
+ & =   x_{2} \bar{x}_{3}\bar{x}_{6}\bar{x}_{10}\bar{x}_{12}x_{13}x_{8} \lor x_{2} \bar{x}_{3}\bar{x}_{6}\bar{x}_{10}\bar{x}_{12}x_{15}x_{8}  \lor x_{2} \bar{x}_{3}\bar{x}_{6}\bar{x}_{10}\bar{x}_{12}\bar{x}_{8} \\
+ &  \lor x_{2} \bar{x}_{3}\bar{x}_{6}\bar{x}_{10}\bar{x}_{12}x_{13} \lor x_{2} \bar{x}_{3}\bar{x}_{6}\bar{x}_{10}\bar{x}_{12}x_{15} \\
+ & =   x_{2}\bar{x}_{3}\bar{x}_{6}\bar{x}_{10}\bar{x}_{12}(x_{13}x_{8} \lor x_{15}x_{8}  \lor \bar{x}_{8} \lor x_{13} \lor x_{15}) \\
+ & =   x_{2}\bar{x}_{3}\bar{x}_{6}\bar{x}_{10}\bar{x}_{12}(\bar{x}_{8} \lor x_{13} \lor x_{15}) \\
+ \end{align*}  
+ したがって，
+ \begin{gather*}
+f(x) \oplus \hat{f(x)} =  x_{2}\bar{x}_{3}\bar{x}_{6}\bar{x}_{10}\bar{x}_{12}(\bar{x}_{8} \lor x_{13} \lor x_{15})
+\end{gather*}  
+この論理式には変数が8つ存在し，$f(x) \oplus \hat{f(x)} = 1$となる変数の値割り当ては7通り($x_{2}=1,x_{3}=0,x_{6}=0,x_{10}=0,x_{12}=0$かつ，$\bar{x}_{8}，x_{13}，x_{15}$のうち１つ以上が真となれば良いので$2^3-1=7$通り)．
+それに対し，変数の値割り当ての総数は$2^8=256$．
+
+よって，求める確率は$7/256 \simeq 0.02734375$．
+ 
   
 %%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{Exercise 61}
