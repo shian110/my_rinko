@@ -117,15 +117,16 @@ def solve(clauses):
 
     #print(true_var)
     #print(m)
-    print("-----------------------(True z[i][k])-----------------------")
-    print("")
-    print(z_li)
-    print("")
     print("-----------------------(f(x)'s terms (DNF))-----------------------")
     print("")
     for i in formula:
         print(i)
     print("")
+    print("-----------------------(True z[i][k])-----------------------")
+    print("")
+    print(z_li)
+    print("")
+    
         
 if __name__ == '__main__':
     
